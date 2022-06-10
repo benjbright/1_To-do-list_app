@@ -1,5 +1,4 @@
-// Global variables
-
+// GLOBAL VARIABLES
 let inputForm = document.getElementById("input-form")
 let listItem = document.getElementById("new-list-item")
 let list = document.getElementById("list-items")
@@ -11,15 +10,13 @@ const leadsFromLocalStorage = JSON.parse(localStorage.getItem("myTodos"))
 let newItem = true
 let itemId = 0
 
-// Check Local Storage
-
+// CHECK LOCAL STORAGE
 if (leadsFromLocalStorage) {
   myTodos = leadsFromLocalStorage
   render(myTodos)
 }
 
-// Add new list item
-
+// ADD NEW LIST ITEM
 inputForm.addEventListener("submit", addListItem)
 
 function addListItem(event) {
@@ -36,6 +33,7 @@ function addListItem(event) {
     }
 
     myTodos.push(item)
+    addDataToServer(newListItem)
   } else {
     const newList = myTodos.map((item) => {
       return item.id != itemId ? item : { ...item, name: newListItem }
@@ -51,8 +49,22 @@ function addListItem(event) {
   newItem = true
 }
 
-// Render list items
+const addDataToServer = async (item) => {
+  const response = await fetch(`${url}/toDoList`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: item,
+    }),
+  })
 
+  const data = await response.json()
+  console.log(data)
+}
+
+// RENDER LIST ITEMS
 function render(todos) {
   const toDoList = todos
     .map((item) => {
@@ -82,7 +94,7 @@ function render(todos) {
   console.log(myTodos)
 }
 
-// Edit a list item
+// EDIT LIST ITEM
 function editItem(id) {
   console.log(`Clicked! ${id}`)
   let editArr = myTodos.filter((item) => item.id == id)
@@ -97,7 +109,7 @@ function editItem(id) {
   itemId = id
 }
 
-// Delete a list item
+// DELETE A LIST ITEM
 function deleteItem(id) {
   console.log(`Clicked! ${id}`)
   let newArr = myTodos.filter((item) => item.id != id)
@@ -108,8 +120,7 @@ function deleteItem(id) {
   localStorage.setItem("myTodos", JSON.stringify(myTodos))
 }
 
-// Delete all list items
-
+// DELETE ALL LIST ITEMS
 deleteBtn.addEventListener("click", deleteAll)
 
 function deleteAll() {
@@ -130,7 +141,7 @@ const employeeId = 1
 
 // GET DATA
 const getData = async () => {
-  const response = await fetch(`${url}/employees`, {
+  const response = await fetch(`${url}/toDoList`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -145,7 +156,7 @@ getData()
 
 // GET SPECIFIC DATA ID
 const getEmployeeData = async (id) => {
-  const response = await fetch(`${url}/employees/${id}`, {
+  const response = await fetch(`${url}/toDoList/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -158,21 +169,33 @@ const getEmployeeData = async (id) => {
 
 getEmployeeData(employeeId)
 
-// POST DATA
-const addEmployee = async () => {
-  const response = await fetch(`${url}/employees`, {
-    method: "POST",
+// DELETE A SPECIFIC ID
+const deleteEmployee = async (id) => {
+  const response = await fetch(`${url}/toDoList/${id}`, {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      name: "Ben Bright",
-      salary: 10000,
-    }),
   })
 
   const data = await response.json()
   console.log(data)
 }
 
-// addEmployee()
+// deleteEmployee(2)
+
+// POST DATA
+const addEmployee = async () => {
+  const response = await fetch(`${url}/toDoList`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: "Ben Bright",
+    }),
+  })
+
+  const data = await response.json()
+  console.log(data)
+}

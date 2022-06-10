@@ -1,14 +1,16 @@
 {
-  "employees": [
+  "toDoList": [
     {
       "id": 1,
-      "name": "Pankaj",
-      "salary": "10000"
+      "name": "Pankaj"
     },
     {
-      "name": "David",
-      "salary": "5000",
-      "id": 2
+      "name": "Test entry to server",
+      "id": 3
+    },
+    {
+      "name": "Complete appraisals",
+      "id": 4
     }
   ]
 }
