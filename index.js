@@ -4,6 +4,8 @@ let listItem = document.getElementById("new-list-item")
 let list = document.getElementById("list-items")
 let deleteBtn = document.getElementById("delete-btn")
 
+const url = "http://localhost:3000"
+
 let myTodos = []
 const leadsFromLocalStorage = JSON.parse(localStorage.getItem("myTodos"))
 
@@ -15,6 +17,21 @@ if (leadsFromLocalStorage) {
   myTodos = leadsFromLocalStorage
   render(myTodos)
 }
+
+// GET DATA FROM JSON SERVER
+const getDataFromServer = async () => {
+  const response = await fetch(`${url}/toDoList`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  const data = await response.json()
+  console.log(data)
+}
+
+getDataFromServer()
 
 // ADD NEW LIST ITEM
 inputForm.addEventListener("submit", addListItem)
@@ -118,6 +135,20 @@ function deleteItem(id) {
 
   render(myTodos)
   localStorage.setItem("myTodos", JSON.stringify(myTodos))
+
+  // deleteDataOnServer(id)
+}
+
+const deleteDataOnServer = async (id) => {
+  const response = await fetch(`${url}/toDoList/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  const data = await response.json()
+  console.log(data)
 }
 
 // DELETE ALL LIST ITEMS
@@ -130,7 +161,7 @@ function deleteAll() {
 }
 
 // JSON SERVER WORKINGS
-const url = "http://localhost:3000"
+// const url = "http://localhost:3000"
 
 const newData = {
   name: "Ben Bright",
@@ -152,7 +183,7 @@ const getData = async () => {
   console.log(data)
 }
 
-getData()
+// getData()
 
 // GET SPECIFIC DATA ID
 const getEmployeeData = async (id) => {
